@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::section})}">
+<head>
+    <title>Add New Book</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<section>
+<div class="container">
+    <h1>Add a New Book to Catalog</h1>
+    <form th:action="${isEdit} ? @{/books/edit/{n}(n=${book.name})} : @{/books/add}"
+          th:object="${book}" method="post">
+        <h1>[[${isEdit} ? 'Edit Book' : 'Add a New Book']]</h1>
+        <div class="form-group">
+            <label>Title:</label>
+            <input type="text" th:field="*{name}" th:readonly="${isEdit}" required />
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Author:</label>
+            <input type="text" th:field="*{author}" required />
+            <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Genre:</label>
+            <input type="text" th:field="*{genre}" />
+            <span th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Price:</label>
+            <input type="number" step="0.01" th:field="*{price}" required />
+            <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Publication Date:</label>
+            <input type="date" th:field="*{publicationDate}" />
+            <span th:if="${#fields.hasErrors('publicationDate')}" th:errors="*{publicationDate}" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Pages:</label>
+            <input type="number" th:field="*{pages}" />
+            <span th:if="${#fields.hasErrors('pages')}" th:errors="*{pages}" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Description:</label>
+            <textarea th:field="*{description}"></textarea>
+            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn">Save Book</button>
+        <a th:href="@{/books}" class="btn-secondary">Cancel</a>
+    </form>
+</div>
+</section>
+</body>
+</html>

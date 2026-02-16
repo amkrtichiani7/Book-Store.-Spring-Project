@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="header_common">
+    <meta charset="UTF-8">
+    <title>Gemini Bookstore</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+<nav th:fragment="navbar">
+    <a th:href="@{/}">Home</a> |
+    <a th:href="@{/books}">Browse Books</a> |
+    <span sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/employees}">Staff Portal</a>
+        </span>
+    <span sec:authorize="isAuthenticated()">
+             Welcome, <span sec:authentication="name">User</span>!
+             <form th:action="@{/logout}" method="post" style="display:inline">
+                 <button type="submit">Logout</button>
+             </form>
+        </span>
+    <span sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}">Login</a>
+        </span>
+</nav>
+</body>
+</html>

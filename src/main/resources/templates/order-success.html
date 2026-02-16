@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::section})}">
+<body>
+<section>
+    <div class="container" style="text-align: center; padding: 40px 0;">
+        <div style="font-size: 4rem; color: #27ae60; margin-bottom: 20px;">✓</div>
+
+        <h2>Payment Confirmed</h2>
+
+        <div style="background: #f9f9f9; border-radius: 8px; padding: 25px; display: inline-block; min-width: 300px; margin: 20px 0;">
+            <p style="margin: 0; color: #666; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;">Amount Charged</p>
+            <h1 style="margin: 10px 0; color: #2c3e50;">
+                $<span th:text="${#numbers.formatDecimal(totalPrice, 1, 2)}">0.00</span>
+            </h1>
+        </div>
+
+        <p style="color: #7f8c8d; max-width: 500px; margin: 0 auto 30px;">
+            The transaction is complete and your balance has been updated. You can view your purchase details in your order history.
+        </p>
+
+        <div class="actions">
+            <a th:href="@{/books}" class="btn">Back to Shop</a>
+            <a th:href="@{/orders/new}" class="btn-secondary">New Order</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>

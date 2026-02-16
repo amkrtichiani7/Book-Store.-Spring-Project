@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::section})}">
+<body>
+<section>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Book Catalog</h2>
+        <a th:href="@{/books/add}" class="btn" sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')">+ Add New Book</a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Genre</th>
+            <th sec:authorize="hasAnyRole('EMPLOYEE', 'ADMIN')">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.name}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.price}"></td>
+            <td th:text="${book.genre}"></td>
+            <td sec:authorize="hasAnyRole('EMPLOYEE', 'ADMIN')">
+                <a th:href="@{/books/edit/{name}(name=${book.name})}" class="btn-secondary" style="padding: 5px 10px;">Edit</a>
+
+                <a th:href="@{/books/delete/{name}(name=${book.name})}"
+                   class="btn-danger"
+                   style="background: #c0392b; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none;"
+                   onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

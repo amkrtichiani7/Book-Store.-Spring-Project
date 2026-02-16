@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::section})}">
+<body>
+<section>
+    <h1>Welcome to the Bookstore Service!</h1>
+    <p>The database is live and the application is running.</p>
+    <div class="actions">
+        <a th:href="@{/orders/new}" class="btn">Place New Order</a>
+    </div>
+</section>
+</body>
+</html>

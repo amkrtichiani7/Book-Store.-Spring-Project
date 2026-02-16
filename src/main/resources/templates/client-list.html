@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::section})}">
+<body>
+<section>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Client Registry</h2>
+            <a th:href="@{/clients/add}" class="btn">+ New Client</a>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Balance</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${clients}">
+                <td th:text="${c.name}"></td>
+                <td th:text="${c.email}"></td>
+                <td th:text="${'$' + c.balance}"></td>
+                <td sec:authorize="hasAnyRole('EMPLOYEE', 'ADMIN')">
+                    <a th:href="@{/clients/edit/{email}(email=${c.email})}" class="btn-secondary" style="padding: 5px 10px;">Edit/Funds</a>
+                    <a th:href="@{/clients/delete/{email}(email=${c.email})}"
+                       class="btn-danger"
+                       style="background: #c0392b; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none;"
+                       onclick="return confirm('Delete this client? This cannot be undone.')">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>

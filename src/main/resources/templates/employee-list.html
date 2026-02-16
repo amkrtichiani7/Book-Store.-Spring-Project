@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::section})}">
+<body>
+<section>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Staff Directory</h2>
+            <a th:href="@{/employees/add}" class="btn" sec:authorize="hasRole('ADMIN')">+ Register Employee</a>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Birth Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e : ${employees}">
+                <td th:text="${e.name}"></td>
+                <td th:text="${e.email}"></td>
+                <td th:text="${e.phone}"></td>
+                <td th:text="${e.birthDate}"></td>
+                <td sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/employees/edit/{email}(email=${e.email})}" class="btn-secondary" style="padding: 5px 10px;">Edit</a>
+                    <a th:href="@{/employees/delete/{email}(email=${e.email})}"
+                       class="btn-danger"
+                       style="background: #c0392b; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none;"
+                       onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>
