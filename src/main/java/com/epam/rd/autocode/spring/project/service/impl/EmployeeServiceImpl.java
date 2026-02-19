@@ -2,6 +2,7 @@ package com.epam.rd.autocode.spring.project.service.impl;
 
 import com.epam.rd.autocode.spring.project.dto.EmployeeDTO;
 import com.epam.rd.autocode.spring.project.exception.AlreadyExistException;
+import com.epam.rd.autocode.spring.project.exception.NotFoundException;
 import com.epam.rd.autocode.spring.project.model.Employee;
 import com.epam.rd.autocode.spring.project.repo.EmployeeRepository;
 import com.epam.rd.autocode.spring.project.service.EmployeeService;
@@ -37,14 +38,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO getEmployeeByEmail(String email) {
         Employee existingEmployee = employeeRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new NotFoundException("Employee not found"));
         return modelMapper.map(existingEmployee, EmployeeDTO.class);
     }
 
     @Override
     public EmployeeDTO updateEmployeeByEmail(String email, EmployeeDTO employee) {
         Employee existingEmployee = employeeRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new NotFoundException("Employee not found"));
 
         modelMapper.map(employee, existingEmployee);
 
@@ -54,7 +55,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void deleteEmployeeByEmail(String email) {
-        employeeRepository.deleteByEmail(email);
+        Employee employee = employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Employee not found"));
+        employeeRepository.delete(employee);
     }
 
     @Override

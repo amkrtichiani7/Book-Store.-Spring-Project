@@ -32,7 +32,7 @@
             <div id="book-items-container">
                 <div th:each="item, stat : *{bookItems}" class="book-item-row" style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
 
-                    <select th:field="*{bookItems[__${stat.index}__].book.name}" class="form-control" style="flex: 2; padding: 8px;" required>
+                    <select th:field="*{bookItems[__${stat.index}__].bookName}" class="form-control" style="flex: 2; padding: 8px;" required>
                         <option value="" disabled selected>Select a book...</option>
                         <option th:each="b : ${allBooks}" th:value="${b.name}" th:text="${b.name} + ' ($' + ${b.price} + ')'"></option>
                     </select>

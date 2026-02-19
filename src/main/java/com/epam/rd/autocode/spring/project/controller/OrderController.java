@@ -46,7 +46,7 @@ public class OrderController {
         // Ensure bookItems list contains one item with nested BookDTO
         List<BookItemDTO> items = new ArrayList<>();
         BookItemDTO initial = new BookItemDTO();
-        initial.setBook(new BookDTO());          // <<< important so form binding to book.name works
+        initial.setBookName("");          // <<< important so form binding to book.name works
         initial.setQuantity(1);
         items.add(initial);
         order.setBookItems(items);

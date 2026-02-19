@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDTO> getOrdersByClient(String clientEmail) {
         Client existingClient = clientRepository.findByEmail(clientEmail)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+                .orElseThrow(() -> new NotFoundException("Client not found"));
 
         return orderRepository.findAllByClient(existingClient)
                 .stream()
@@ -80,8 +80,8 @@ public class OrderServiceImpl implements OrderService {
         List<BookItem> bookItems = new ArrayList<>();
 
         for (BookItemDTO itemDTO : orderDTO.getBookItems()) {
-            Book book = bookRepository.findByName(itemDTO.getBook().getName())
-                    .orElseThrow(() -> new NotFoundException("Book not found: " + itemDTO.getBook().getName()));
+            Book book = bookRepository.findByName(itemDTO.getBookName())
+                    .orElseThrow(() -> new NotFoundException("Book not found: " + itemDTO.getBookName()));
 
             BigDecimal itemTotal = book.getPrice().multiply(BigDecimal.valueOf(itemDTO.getQuantity()));
             total = total.add(itemTotal);
@@ -92,13 +92,11 @@ public class OrderServiceImpl implements OrderService {
             bookItems.add(bookItem);
         }
 
-        System.out.println("TOTAAAAAAAAAL:  " + total);
-
         if (client.getBalance().compareTo(total) < 0) {
             throw new InsufficientFundsException("Insufficient funds! Required: $" + total + ", Available: $" + client.getBalance());
         }else{
             client.setBalance(client.getBalance().subtract(total));
-            clientRepository.save(client);
+            clientService.updateClientByEmail(client.getEmail(),modelMapper.map(client, ClientDTO.class));
         }
 
         order.setPrice(total);

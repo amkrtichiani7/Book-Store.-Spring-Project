@@ -72,7 +72,7 @@ class OrderServiceTest {
         BookDTO bookDto = new BookDTO();
         bookDto.setName(bookName);
         BookItemDTO itemDto = new BookItemDTO();
-        itemDto.setBook(bookDto);
+        itemDto.setBookName(bookDto.getName());
         itemDto.setQuantity(1);
 
         OrderDTO orderDto = new OrderDTO();

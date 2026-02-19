@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class BookItemDTO {
     @NotNull(message = "Book selection is required")
-    private BookDTO book;
+    private String bookName;
 
     @Min(value = 1, message = "Quantity must be at least 1")
     private Integer quantity;

@@ -2,6 +2,7 @@ package com.epam.rd.autocode.spring.project.service.impl;
 
 import com.epam.rd.autocode.spring.project.dto.ClientDTO;
 import com.epam.rd.autocode.spring.project.exception.AlreadyExistException;
+import com.epam.rd.autocode.spring.project.exception.NotFoundException;
 import com.epam.rd.autocode.spring.project.model.Client;
 import com.epam.rd.autocode.spring.project.repo.ClientRepository;
 import com.epam.rd.autocode.spring.project.service.ClientService;
@@ -37,15 +38,15 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClientDTO getClientByEmail(String email) {
         Client existingClient = clientRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+                .orElseThrow(() -> new NotFoundException("Client not found"));
         return modelMapper.map(existingClient, ClientDTO.class);
     }
 
     @Override
     public ClientDTO updateClientByEmail(String email, ClientDTO client) {
         Client existingClient = clientRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Client not found"));
-        modelMapper.map(client, existingClient);
+                .orElseThrow(() -> new NotFoundException("Client not found"));
+        modelMapper.map(client, Client.class);
 
         Client updatedClient = clientRepository.save(existingClient);
         return modelMapper.map(updatedClient, ClientDTO.class);
