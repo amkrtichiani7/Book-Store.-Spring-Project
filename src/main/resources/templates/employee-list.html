@@ -66,7 +66,7 @@
         </table>
         <div class="pagination-container" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
             <a th:if="${currentPage > 0}"
-               th:href="@{/books(page=${currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+               th:href="@{/employees(page=${currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
                class="btn-secondary">&laquo; Previous</a>
 
             <span style="padding: 8px 15px; background: #eee; border-radius: 4px;">
