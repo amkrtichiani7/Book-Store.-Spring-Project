@@ -15,13 +15,14 @@ import com.epam.rd.autocode.spring.project.service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,25 +43,21 @@ public class OrderServiceImpl implements OrderService {
         this.modelMapper = modelMapper;
     }
     @Override
-    public List<OrderDTO> getOrdersByClient(String clientEmail) {
+    public Page<OrderDTO> getOrdersByClient(String clientEmail, Pageable pageable) {
         Client existingClient = clientRepository.findByEmail(clientEmail)
                 .orElseThrow(() -> new NotFoundException("Client not found"));
 
-        return orderRepository.findAllByClient(existingClient)
-                .stream()
-                .map(order -> modelMapper.map(order,OrderDTO.class))
-                .collect(Collectors.toList());
+        return orderRepository.findAllByClient(existingClient, pageable)
+                .map(order -> modelMapper.map(order,OrderDTO.class));
     }
 
     @Override
-    public List<OrderDTO> getOrdersByEmployee(String employeeEmail) {
+    public Page<OrderDTO> getOrdersByEmployee(String employeeEmail, Pageable pageable) {
         Employee existingEmployee = employeeRepository.findByEmail(employeeEmail)
                 .orElseThrow(() -> new NotFoundException("Orders not found"));
 
-        return orderRepository.findAllByEmployee(existingEmployee)
-                .stream()
-                .map(order -> modelMapper.map(order,OrderDTO.class))
-                .collect(Collectors.toList());
+        return orderRepository.findAllByEmployee(existingEmployee, pageable)
+                .map(order -> modelMapper.map(order,OrderDTO.class));
     }
 
     @Transactional
@@ -104,5 +101,11 @@ public class OrderServiceImpl implements OrderService {
 
         Order savedOrder = orderRepository.save(order);
         return modelMapper.map(savedOrder, OrderDTO.class);
+    }
+
+    @Override
+    public Page<OrderDTO> getAllOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable)
+                .map(order -> modelMapper.map(order, OrderDTO.class));
     }
 }

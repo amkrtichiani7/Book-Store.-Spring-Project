@@ -8,18 +8,48 @@
             <h2>Staff Directory</h2>
             <a th:href="@{/employees/add}" class="btn" sec:authorize="hasRole('ADMIN')">+ Register Employee</a>
         </div>
+        <div class="search-container">
+            <form th:action="@{/employees}" method="get" class="search-form">
+                <input type="text" name="keyword" th:value="${keyword}" placeholder="Search staff by name or email...">
+                <div class="search-actions">
+                    <button type="submit" class="btn">Search</button>
+                    <a th:href="@{/employees}" class="btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
         <table>
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Birth Date</th>
+                <th>
+                    <a th:href="@{/employees(sortBy='Name', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                        Name ↑↓
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/employees(sortBy='Email', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                        Email ↑↓
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/employees(sortBy='Phone', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                        Phone ↑↓
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/employees(sortBy='BirthDate', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                        Birth Date ↑↓
+                    </a>
+                </th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="e : ${employees}">
+            <tr th:if="${#lists.isEmpty(employees)}">
+                <td colspan="5" style="text-align: center; color: #7f8c8d; padding: 30px;">
+                    No results found for "<span th:text="${keyword}"></span>"
+                </td>
+            </tr>
+            <tr th:each="e : ${employees}" class="text-center">
                 <td th:text="${e.name}"></td>
                 <td th:text="${e.email}"></td>
                 <td th:text="${e.phone}"></td>
@@ -34,6 +64,19 @@
             </tr>
             </tbody>
         </table>
+        <div class="pagination-container" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+            <a th:if="${currentPage > 0}"
+               th:href="@{/books(page=${currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+               class="btn-secondary">&laquo; Previous</a>
+
+            <span style="padding: 8px 15px; background: #eee; border-radius: 4px;">
+                Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span>
+            </span>
+
+            <a th:if="${currentPage + 1 < totalPages}"
+               th:href="@{/employees(page=${currentPage + 1}, keyword=${keyword}, sortBy=${sortBy})}"
+               class="btn-secondary">Next &raquo;</a>
+        </div>
     </div>
 </section>
 </body>

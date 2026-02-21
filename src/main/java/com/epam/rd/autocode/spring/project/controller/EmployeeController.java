@@ -3,6 +3,10 @@ package com.epam.rd.autocode.spring.project.controller;
 import com.epam.rd.autocode.spring.project.dto.EmployeeDTO;
 import com.epam.rd.autocode.spring.project.service.EmployeeService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +22,25 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public String listEmployees(Model model) {
-        model.addAttribute("employees", employeeService.getAllEmployees());
+    public String listEmployees(@RequestParam(name = "keyword", required = false) String keyword,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "5") int size,
+                                @RequestParam(defaultValue = "name") String sortBy,
+                                Model model) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        Page<EmployeeDTO> employeePage;
+        if(keyword != null && !keyword.isEmpty()){
+            employeePage = employeeService.searchEmployees(keyword,pageable);
+        }else {
+            employeePage = employeeService.getAllEmployees(pageable);
+        }
+        model.addAttribute("employees", employeePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", employeePage.getTotalPages());
+        model.addAttribute("totalItems", employeePage.getTotalElements());
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("keyword", keyword);
         return "employee-list";
     }
     @GetMapping("/delete/{email}")

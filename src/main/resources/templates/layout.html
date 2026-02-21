@@ -9,7 +9,7 @@
 <header>
     <nav>
         <div class="container" style="display: flex; justify-content: space-between;">
-            <strong>BookStore</strong>
+            <strong style="color: white; font-size:20px;">BookStore</strong>
             <div class="lang-links">
                 <a th:href="@{/?lang=en}">EN</a> | <a th:href="@{/?lang=ru}">RU</a>
             </div>
@@ -25,11 +25,15 @@
                th:href="@{/employees}"
                th:text="#{nav.employees}">Staff Portal</a>
 
-            <a th:href="@{/orders/new}" th:text="#{nav.placeOrder}">Place Order</a>
+            <a sec:authorize="hasRole('CLIENT')" th:href="@{/orders/new}" th:text="#{nav.placeOrder}">Place Order</a>
+
+            <a sec:authorize="hasRole('CLIENT')" th:href="@{/profile}" th:text="#{nav.profile}">Profile</a>
 
             <span sec:authorize="isAuthenticated()" style="float:right">
                 <form th:action="@{/logout}" method="post" style="display:inline">
-                    <button type="submit" class="btn-link" th:text="#{nav.logout}">Logout</button>
+                    <button type="submit" class="btn-link"
+                            style="background: transparent; border: 1px solid white; color: white; border-radius: 4px; padding: 2px 8px; cursor: pointer;"
+                            th:text="#{nav.logout}">Logout</button>
                 </form>
             </span>
             <a sec:authorize="!isAuthenticated()"

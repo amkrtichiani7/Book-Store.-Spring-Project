@@ -1,71 +1,177 @@
+/* Color Palette */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #34495e;
+    --accent-color: #27ae60;
+    --danger-color: #e74c3c;
+    --light-gray: #f8f9fa;
+    --text-color: #333;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
-    background-color: #f4f7f6;
-    color: #333;
+    background-color: #ebedef;
+    color: var(--text-color);
+    line-height: 1.6;
 }
 
+/* Navbar Upgrades */
 nav {
-    background: #2c3e50;
-    padding: 1rem;
-    color: white;
+    background: var(--primary-color);
+    padding: 0.8rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
-nav a {
-    color: Black;
+nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    width: 90%;
+}
+
+nav a, nav span, nav button {
+    color: #ffffff !important; /* Fixed visibility */
     text-decoration: none;
     margin-right: 15px;
-    font-weight: bold;
+    font-weight: 500;
+    transition: color 0.3s;
 }
 
+nav a:hover {
+    color: #3498db !important;
+}
+
+/* Layout & Containers */
 .container {
-    width: 80%;
-    margin: 20px auto;
+    width: 85%;
+    max-width: 1200px;
+    margin: 30px auto;
     background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
 }
 
+/* Typography */
+h1, h2, h3 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--light-gray);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Table Styling */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-}
-
-th, td {
-    text-align: left;
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 th {
-    background-color: #2980b9;
-    color: black;
-}
-
-.btn {
-    display: inline-block;
-    padding: 10px 15px;
-    background: #27ae60;
+    background-color: var(--secondary-color);
     color: white;
-    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 15px;
+}
+
+td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+tr:hover {
+    background-color: #f1f4f6;
+}
+
+/* Button System */
+.btn, .btn-secondary, .btn-danger {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 6px;
     text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s, background 0.2s;
 }
 
-.alert-error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: 12px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    font-weight: bold;
+.btn { background: var(--accent-color); color: white; }
+.btn:hover { background: #219150; transform: translateY(-1px); }
+
+.btn-secondary { background: #95a5a6; color: white; margin-left: 10px; }
+.btn-secondary:hover { background: #7f8c8d; }
+
+.btn-danger { background: var(--danger-color); color: white; }
+.btn-danger:hover { background: #c0392b; }
+
+.btn-link { background: none; border: 1px solid white; padding: 4px 10px; }
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 1.5rem;
 }
 
-.text-danger {
-    color: #dc3545;
-    font-size: 0.85em;
-    margin-top: 5px;
+.form-group label {
     display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+input[type="text"], input[type="email"], input[type="password"],
+input[type="number"], input[type="date"], select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box; /* Critical for layout */
+}
+
+input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 5px rgba(52,152,219,0.3);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+/* Search Form Styling */
+.search-container {
+    background: var(--light-gray);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.search-form {
+    display: flex;
+    flex: 1;
+    gap: 10px;
+}
+
+.search-form input {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-actions {
+    display: flex;
+    gap: 5px;
 }

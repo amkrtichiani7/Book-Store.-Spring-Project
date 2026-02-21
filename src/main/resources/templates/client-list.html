@@ -8,17 +8,43 @@
             <h2>Client Registry</h2>
             <a th:href="@{/clients/add}" class="btn">+ New Client</a>
         </div>
+        <div class="search-container">
+            <form th:action="@{/clients}" method="get" class="search-form">
+                <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by name or email...">
+                <div class="search-actions">
+                    <button type="submit" class="btn">Search</button>
+                    <a th:href="@{/clients}" class="btn-secondary">Reset</a>
+                </div>
+            </form>
+        </div>
         <table>
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Balance</th>
+                <th>
+                    <a th:href="@{/clients(sortBy='Name', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                        Name ↑↓
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/clients(sortBy='Email', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                        Email ↑↓
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/clients(sortBy='Balance', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                        Balance ↑↓
+                    </a>
+                </th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="c : ${clients}">
+            <tr th:if="${#lists.isEmpty(clients)}">
+                <td colspan="5" style="text-align: center; color: #7f8c8d; padding: 30px;">
+                    No results found for "<span th:text="${keyword}"></span>"
+                </td>
+            </tr>
+            <tr th:each="c : ${clients}" class="text-center">
                 <td th:text="${c.name}"></td>
                 <td th:text="${c.email}"></td>
                 <td th:text="${'$' + c.balance}"></td>
@@ -32,6 +58,19 @@
             </tr>
             </tbody>
         </table>
+        <div class="pagination-container" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+            <a th:if="${currentPage > 0}"
+               th:href="@{/books(page=${currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+               class="btn-secondary">&laquo; Previous</a>
+
+            <span style="padding: 8px 15px; background: #eee; border-radius: 4px;">
+                Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span>
+            </span>
+
+            <a th:if="${currentPage + 1 < totalPages}"
+               th:href="@{/clients(page=${currentPage + 1}, keyword=${keyword}, sortBy=${sortBy})}"
+               class="btn-secondary">Next &raquo;</a>
+        </div>
     </div>
 </section>
 </body>

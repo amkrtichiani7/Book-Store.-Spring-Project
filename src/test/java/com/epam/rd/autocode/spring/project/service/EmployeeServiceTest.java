@@ -10,6 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,14 +48,17 @@ class EmployeeServiceTest {
     }
 
     @Test
-    void testFindAllEmployees() {
-        List<Employee> employees = List.of(new Employee(), new Employee());
-        when(employeeRepository.findAll()).thenReturn(employees);
+    void testFindAllEmployees_Paginated() {
+        Pageable pageable = PageRequest.of(0, 5);
+        List<Employee> employeeList = List.of(new Employee(), new Employee());
+        Page<Employee> employeePage = new PageImpl<>(employeeList, pageable, employeeList.size());
+
+        when(employeeRepository.findAll(pageable)).thenReturn(employeePage);
         when(modelMapper.map(any(Employee.class), eq(EmployeeDTO.class))).thenReturn(new EmployeeDTO());
 
-        List<EmployeeDTO> results = employeeService.getAllEmployees();
+        Page<EmployeeDTO> resultPage = employeeService.getAllEmployees(pageable);
 
-        assertEquals(2, results.size());
-        verify(employeeRepository).findAll();
+        assertEquals(2, resultPage.getContent().size());
+        verify(employeeRepository).findAll(pageable);
     }
 }

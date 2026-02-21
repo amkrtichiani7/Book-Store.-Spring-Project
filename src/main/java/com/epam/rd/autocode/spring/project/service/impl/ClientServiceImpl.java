@@ -8,11 +8,10 @@ import com.epam.rd.autocode.spring.project.repo.ClientRepository;
 import com.epam.rd.autocode.spring.project.service.ClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,11 +27,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<ClientDTO> getAllClients() {
-        return clientRepository.findAll()
-                .stream()
-                .map(client -> modelMapper.map(client, ClientDTO.class))
-                .collect(Collectors.toList());
+    public Page<ClientDTO> getAllClients(Pageable pageable) {
+        return clientRepository.findAll(pageable).map(client -> modelMapper.map(client, ClientDTO.class));
     }
 
     @Override
@@ -66,5 +62,11 @@ public class ClientServiceImpl implements ClientService {
         client.setPassword(passwordEncoder.encode(clientDTO.getPassword()));
         clientRepository.save(client);
         return clientDTO;
+    }
+
+    @Override
+    public Page<ClientDTO> searchClients(String keyword, Pageable pageable) {
+        return clientRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable)
+                .map(client -> modelMapper.map(client, ClientDTO.class));
     }
 }

@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,14 +44,13 @@ class OrderServiceTest {
     private ModelMapper modelMapper;
 
     @Mock
-    private ClientService clientService; // <--- THE MISSING PIECE
+    private ClientService clientService;
 
     @InjectMocks
     private OrderServiceImpl orderService;
 
     @Test
     void testAddOrder_Success() {
-        // 1. Arrange - Data
         String clientEmail = "rich-client@test.com";
         String employeeEmail = "admin@test.com";
         String bookName = "The Great Gatsby";

@@ -3,10 +3,15 @@ package com.epam.rd.autocode.spring.project.controller;
 import com.epam.rd.autocode.spring.project.dto.ClientDTO;
 import com.epam.rd.autocode.spring.project.service.ClientService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequestMapping("/clients")
@@ -18,8 +23,25 @@ public class ClientController {
     }
 
     @GetMapping
-    public String listClients(Model model) {
-        model.addAttribute("clients", clientService.getAllClients());
+    public String listClients(@RequestParam(name = "keyword", required = false) String keyword,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "5") int size,
+                              @RequestParam(defaultValue = "name") String sortBy,
+                              Model model) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        Page<ClientDTO> clientPage;
+        if (keyword != null && !keyword.isEmpty()) {
+            clientPage = clientService.searchClients(keyword, pageable);
+        }else {
+            clientPage = clientService.getAllClients(pageable);
+        }
+        model.addAttribute("clients", clientPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", clientPage.getTotalPages());
+        model.addAttribute("totalItems", clientPage.getTotalElements());
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("keyword", keyword);
         return "client-list";
     }
 

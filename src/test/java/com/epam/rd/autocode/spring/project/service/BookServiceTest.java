@@ -11,9 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -35,7 +33,6 @@ class BookServiceTest {
         BookDTO dto = new BookDTO();
 
         when(bookRepository.findByName("The Hobbit")).thenReturn(Optional.of(book));
-        // You also need to mock the mapper's behavior!
         when(modelMapper.map(book, BookDTO.class)).thenReturn(dto);
 
         BookDTO result = bookService.getBookByName("The Hobbit");

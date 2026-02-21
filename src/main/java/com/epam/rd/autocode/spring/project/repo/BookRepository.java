@@ -2,6 +2,8 @@ package com.epam.rd.autocode.spring.project.repo;
 
 import com.epam.rd.autocode.spring.project.model.Book;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
@@ -13,4 +15,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Optional<Book> findByName(String name);
     @Transactional @Modifying
     void deleteBookByName(String name);
+    Page<Book> findByNameContainingIgnoreCaseOrAuthorContainingIgnoreCaseOrGenreContainingIgnoreCase(String name, String author, String genre,  Pageable pageable);
 }

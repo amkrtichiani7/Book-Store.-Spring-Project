@@ -3,6 +3,10 @@ package com.epam.rd.autocode.spring.project.controller;
 import com.epam.rd.autocode.spring.project.dto.BookDTO;
 import com.epam.rd.autocode.spring.project.service.BookService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +22,25 @@ public class BookController {
     }
 
     @GetMapping
-    public String listBooks(Model model) {
-        model.addAttribute("books", bookService.getAllBooks());
+    public String listBooks(@RequestParam(name = "keyword", required = false) String keyword,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "5") int size,
+                            @RequestParam(defaultValue = "name") String sortBy,
+                            Model model) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        Page<BookDTO> bookPage;
+        if (keyword != null && !keyword.isEmpty()) {
+            bookPage = bookService.searchBooks(keyword, pageable);
+        } else {
+            bookPage = bookService.getAllBooks(pageable);
+        }
+        model.addAttribute("books", bookPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", bookPage.getTotalPages());
+        model.addAttribute("totalItems", bookPage.getTotalElements());
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("keyword", keyword);
         return "book-list";
     }
 

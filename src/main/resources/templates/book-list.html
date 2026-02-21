@@ -7,25 +7,86 @@
         <h2>Book Catalog</h2>
         <a th:href="@{/books/add}" class="btn" sec:authorize="hasAnyRole('ADMIN', 'EMPLOYEE')">+ Add New Book</a>
     </div>
+    <div class="search-container">
+        <form th:action="@{/books}" method="get" class="search-form">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by title, author, or genre...">
+            <div class="search-actions">
+                <button type="submit" class="btn">Search</button>
+                <a th:href="@{/books}" class="btn-secondary">Reset</a>
+            </div>
+        </form>
+    </div>
     <table>
         <thead>
         <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Price</th>
-            <th>Genre</th>
+            <th>
+                <a th:href="@{/books(sortBy='name', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                    Title ↑↓
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/books(sortBy='author', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                    Author ↑↓
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/books(sortBy='price', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                    Price ↑↓
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/books(sortBy='genre', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                    Genre ↑↓
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/books(sortBy='language', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                    language ↑↓
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/books(sortBy='ageGroup', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                    Age Group ↑↓
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/books(sortBy='pages', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                    Pages ↑↓
+                </a>
+            </th>
+            <th>
+                <a th:href="@{/books(sortBy='publicationDate', keyword=${keyword}, page=${currentPage})}" style="color: white; text-decoration: none;">
+                    Publication Date ↑↓
+                </a>
+            </th>
             <th sec:authorize="hasAnyRole('EMPLOYEE', 'ADMIN')">Actions</th>
         </tr>
         </thead>
         <tbody>
+        <tr th:if="${#lists.isEmpty(books)}">
+            <td colspan="9" style="text-align: center; color: #7f8c8d; padding: 30px;">
+                No results found for "<span th:text="${keyword}"></span>"
+            </td>
+        </tr>
         <tr th:each="book : ${books}">
-            <td th:text="${book.name}"></td>
+            <td th:text="${book.name}" style="font-weight: bold;"></td>
             <td th:text="${book.author}"></td>
-            <td th:text="${book.price}"></td>
+            <td th:text="'$' + ${book.price}"></td>
             <td th:text="${book.genre}"></td>
-            <td sec:authorize="hasAnyRole('EMPLOYEE', 'ADMIN')">
-                <a th:href="@{/books/edit/{name}(name=${book.name})}" class="btn-secondary" style="padding: 5px 10px;">Edit</a>
+            <td th:text="${book.language}"></td>
+            <td>
+                <span th:if="${book.ageGroup != null}"
+                      class="badge"
+                      th:classappend="${book.ageGroup.name() == 'ADULT' ? 'bg-dark' : 'bg-info'}"
+                      th:text="${book.ageGroup}">
+                </span>
+                <span th:if="${book.ageGroup == null}" class="badge bg-secondary">N/A</span>
+            </td>
+            <td th:text="${book.pages}"></td>
+            <td th:text="${book.publicationDate}"></td>
 
+            <td sec:authorize="hasAnyRole('EMPLOYEE', 'ADMIN')" style="white-space: nowrap;">
+                <a th:href="@{/books/edit/{name}(name=${book.name})}" class="btn-secondary" style="padding: 5px 10px;">Edit</a>
                 <a th:href="@{/books/delete/{name}(name=${book.name})}"
                    class="btn-danger"
                    style="background: #c0392b; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none;"
@@ -34,6 +95,19 @@
         </tr>
         </tbody>
     </table>
+    <div class="pagination-container" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+        <a th:if="${currentPage > 0}"
+           th:href="@{/books(page=${currentPage - 1}, keyword=${keyword}, sortBy=${sortBy})}"
+           class="btn-secondary">&laquo; Previous</a>
+
+        <span style="padding: 8px 15px; background: #eee; border-radius: 4px;">
+        Page <span th:text="${currentPage + 1}">1</span> of <span th:text="${totalPages}">1</span>
+    </span>
+
+        <a th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/books(page=${currentPage + 1}, keyword=${keyword}, sortBy=${sortBy})}"
+           class="btn-secondary">Next &raquo;</a>
+    </div>
 </section>
 </body>
 </html>

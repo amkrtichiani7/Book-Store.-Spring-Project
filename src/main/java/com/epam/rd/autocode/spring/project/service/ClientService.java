@@ -1,12 +1,12 @@
 package com.epam.rd.autocode.spring.project.service;
 
 import com.epam.rd.autocode.spring.project.dto.ClientDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ClientService {
 
-    List<ClientDTO> getAllClients();
+    Page<ClientDTO> getAllClients(Pageable pageable);
 
     ClientDTO getClientByEmail(String email);
 
@@ -15,4 +15,6 @@ public interface ClientService {
     void deleteClientByEmail(String email);
 
     ClientDTO addClient(ClientDTO client);
+
+    Page<ClientDTO> searchClients(String keyword, Pageable pageable);
 }

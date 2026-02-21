@@ -8,6 +8,6 @@ public class AuthController {
 
     @GetMapping("/login")
     public String login() {
-        return "login"; // This looks for login.html in src/main/resources/templates
+        return "login";
     }
 }

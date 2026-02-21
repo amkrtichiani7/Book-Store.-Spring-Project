@@ -8,11 +8,10 @@ import com.epam.rd.autocode.spring.project.repo.EmployeeRepository;
 import com.epam.rd.autocode.spring.project.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,11 +27,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeDTO> getAllEmployees() {
-        return employeeRepository.findAll()
-                .stream()
-                .map(employee -> modelMapper.map(employee, EmployeeDTO.class))
-                .collect(Collectors.toList());
+    public Page<EmployeeDTO> getAllEmployees(Pageable pageable) {
+        return employeeRepository.findAll(pageable).map(employee -> modelMapper.map(employee, EmployeeDTO.class));
     }
 
     @Override
@@ -69,5 +65,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(passwordEncoder.encode(employeeDTO.getPassword()));
         employeeRepository.save(employee);
         return employeeDTO;
+    }
+
+    @Override
+    public Page<EmployeeDTO> searchEmployees(String keyword, Pageable pageable) {
+        return employeeRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword, pageable)
+                .map(employee -> modelMapper.map(employee, EmployeeDTO.class));
     }
 }

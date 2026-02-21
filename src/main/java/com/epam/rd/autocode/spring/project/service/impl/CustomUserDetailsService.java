@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<Employee> employee = employeeRepo.findByEmail(email);
         if (employee.isPresent()) {
             Employee e = employee.get();
-            String role = (e.getEmail().equals("admin@test.com") || e.getEmail().equals("john.doe@email.com"))
+            String role = (e.getEmail().equals("admin@test.com"))
                     ? "ADMIN" : "EMPLOYEE";
 
             return User.builder()

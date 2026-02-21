@@ -1,10 +1,9 @@
 package com.epam.rd.autocode.spring.project.repo;
 
-import com.epam.rd.autocode.spring.project.model.Book;
 import com.epam.rd.autocode.spring.project.model.Employee;
-import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -12,6 +11,5 @@ import java.util.Optional;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByEmail(String email);
-    @Transactional @Modifying
-    void deleteByEmail(String email);
+    Page<Employee> findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(String name, String email, Pageable pageable);
 }

@@ -8,10 +8,10 @@ import com.epam.rd.autocode.spring.project.repo.BookRepository;
 import com.epam.rd.autocode.spring.project.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,11 +25,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDTO> getAllBooks() {
-        return bookRepository.findAll()
-                .stream()
-                .map(book -> modelMapper.map(book, BookDTO.class))
-                .collect(Collectors.toList());
+    public Page<BookDTO> getAllBooks(Pageable pageable) {
+        return bookRepository.findAll(pageable).map(book -> modelMapper.map(book, BookDTO.class));
     }
 
     @Override
@@ -62,5 +59,11 @@ public class BookServiceImpl implements BookService {
         }
         bookRepository.save(modelMapper.map(book, Book.class));
         return book;
+    }
+
+    @Override
+    public Page<BookDTO> searchBooks(String keyword, Pageable pageable) {
+        return bookRepository.findByNameContainingIgnoreCaseOrAuthorContainingIgnoreCaseOrGenreContainingIgnoreCase(keyword, keyword, keyword, pageable)
+                .map(book -> modelMapper.map(book, BookDTO.class));
     }
 }

@@ -18,7 +18,7 @@ public class MvcConfig implements WebMvcConfigurer {
     @Bean(name = "localeResolver")
     public LocaleResolver localeResolver() {
         SessionLocaleResolver slr = new SessionLocaleResolver();
-        slr.setDefaultLocale(Locale.ENGLISH); // make English the default
+        slr.setDefaultLocale(Locale.ENGLISH);
         return slr;
     }
 
@@ -34,11 +34,10 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(localeChangeInterceptor());
     }
 
-    // Optional: explicit MessageSource bean (recommended)
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
-        ms.setBasename("classpath:messages"); // base name 'messages'
+        ms.setBasename("classpath:messages");
         ms.setDefaultEncoding("UTF-8");
         ms.setFallbackToSystemLocale(false);
         return ms;

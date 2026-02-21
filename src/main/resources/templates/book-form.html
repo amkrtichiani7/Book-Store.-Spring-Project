@@ -7,7 +7,6 @@
 <body>
 <section>
 <div class="container">
-    <h1>Add a New Book to Catalog</h1>
     <form th:action="${isEdit} ? @{/books/edit/{n}(n=${book.name})} : @{/books/add}"
           th:object="${book}" method="post">
         <h1>[[${isEdit} ? 'Edit Book' : 'Add a New Book']]</h1>
@@ -30,6 +29,21 @@
             <label>Price:</label>
             <input type="number" step="0.01" th:field="*{price}" required />
             <span th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label>Age Group:</label>
+            <select th:field="*{ageGroup}" class="form-control" required>
+                <option th:each="group : ${T(com.epam.rd.autocode.spring.project.model.enums.AgeGroup).values()}"
+                        th:value="${group}" th:text="${group}"></option>
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Language:</label>
+            <select th:field="*{language}" class="form-control" required>
+                <option th:each="lang : ${T(com.epam.rd.autocode.spring.project.model.enums.Language).values()}"
+                        th:value="${lang}" th:text="${lang}"></option>
+            </select>
         </div>
         <div class="form-group">
             <label>Publication Date:</label>
