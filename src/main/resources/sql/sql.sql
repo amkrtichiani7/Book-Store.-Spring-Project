@@ -1,7 +1,7 @@
 INSERT INTO EMPLOYEES (BIRTH_DATE, EMAIL, NAME, PASSWORD, PHONE)
 VALUES
        ('1990-05-15', 'admin@test.com', 'admin', '$2a$10$obBti51aNImlsyRNnBEVZOd44Z.aWjxAWL6FL32Vv7D7YqYxbhIKa', '555666777'), --admin123, ADMIN can manage employees
-       ('1990-05-15', 'john.doe@email.com', 'John Doe', '$2a$10$rq0vStzIaby17grOUzJhw.QGAOJjlCNOpRyshtwkUXNQxZVRo2hQy	', '5551234567'), --pass123
+       ('1990-05-15', 'john.doe@email.com', 'John Doe', '$2a$10$rq0vStzIaby17grOUzJhw.QGAOJjlCNOpRyshtwkUXNQxZVRo2hQy', '5551234567'), --pass123
        ('1985-09-20', 'jane.smith@email.com', 'Jane Smith', '$2a$10$eJn3LkD1Ax.QpQdULcydju1ZYP5szt4/tAzCBx0R0g.nEColqb9v6', '5559876543'), --abc456
        ('1978-03-08', 'bob.jones@email.com', 'Bob Jones', '$2a$10$kuws0sp7ASCGqh7ZzABnQuPfyLprItx.L9OFigGt5R5Ju8yG3AfsK', '5553216789'), --qwerty789
        ('1982-11-25', 'alice.white@email.com', 'Alice White', '$2a$10$EENtcpMXK7Nv2w6o20N22ulBuMBsUQV.umrfc6RB855/DLr1QJx7y', '5558765432'), --secret567

@@ -37,11 +37,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDTO updateBookByName(String name, BookDTO book) {
+    public BookDTO updateBookByName(String name, BookDTO bookDTO) {
         Book existingBook = bookRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        modelMapper.map(book, existingBook);
+        modelMapper.map(bookDTO, existingBook);
 
         Book updatedBook = bookRepository.save(existingBook);
         return modelMapper.map(updatedBook, BookDTO.class);
@@ -57,8 +57,8 @@ public class BookServiceImpl implements BookService {
         if(bookRepository.findByName(book.getName()).isPresent()) {
             throw new AlreadyExistException("Book with this Title already exists");
         }
-        bookRepository.save(modelMapper.map(book, Book.class));
-        return book;
+        Book savedBook = bookRepository.save(modelMapper.map(book, Book.class));
+        return modelMapper.map(savedBook, BookDTO.class);
     }
 
     @Override

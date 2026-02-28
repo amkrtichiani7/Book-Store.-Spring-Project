@@ -41,7 +41,7 @@ public class Constants {
 
     static class Book {
         public static final String CLASS_NAME = "Book";
-        public static final int CLASS_COUNT_FIELDS = 11;
+        public static final int CLASS_COUNT_FIELDS = 12;
         public static final int CLASS_COUNT_CONSTRUCTORS = 2;
         public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS = CLASS_COUNT_FIELDS;
     }
@@ -55,14 +55,14 @@ public class Constants {
 
     static class Client {
         public static final String CLASS_NAME = "Client";
-        public static final int CLASS_COUNT_FIELDS = 1;
+        public static final int CLASS_COUNT_FIELDS = 2;
         public static final int CLASS_COUNT_CONSTRUCTORS = 2;
         public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS = 5;
     }
 
     static class Employee {
         public static final String CLASS_NAME = "Employee";
-        public static final int CLASS_COUNT_FIELDS = 2;
+        public static final int CLASS_COUNT_FIELDS = 3;
         public static final int CLASS_COUNT_CONSTRUCTORS = 2;
         public static final int PARAMETERS_IN_CONSTRUCTOR_WITH_PARAMETERS = 6;
     }

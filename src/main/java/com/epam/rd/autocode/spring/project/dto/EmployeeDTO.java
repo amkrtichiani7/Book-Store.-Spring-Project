@@ -14,7 +14,6 @@ public class EmployeeDTO{
     @Email(message = "Valid email is required")
     private String email;
 
-    @NotBlank(message = "Password is required")
     private String password;
 
     @NotBlank(message = "Name is required")

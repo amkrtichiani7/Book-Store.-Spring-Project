@@ -24,8 +24,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -67,33 +66,30 @@ class OrderServiceTest {
         bookEntity.setName(bookName);
         bookEntity.setPrice(bookPrice);
 
-        BookDTO bookDto = new BookDTO();
-        bookDto.setName(bookName);
         BookItemDTO itemDto = new BookItemDTO();
-        itemDto.setBookName(bookDto.getName());
+        itemDto.setBookName(bookName);
         itemDto.setQuantity(1);
 
         OrderDTO orderDto = new OrderDTO();
         orderDto.setClientEmail(clientEmail);
         orderDto.setEmployeeEmail(employeeEmail);
-        orderDto.setPrice(bookPrice);
         orderDto.setBookItems(List.of(itemDto));
 
         when(clientRepository.findByEmail(clientEmail)).thenReturn(Optional.of(client));
         when(employeeRepository.findByEmail(employeeEmail)).thenReturn(Optional.of(employee));
         when(bookRepository.findByName(bookName)).thenReturn(Optional.of(bookEntity));
 
-        when(orderRepository.save(any(Order.class))).thenReturn(new Order());
+        Order savedOrder = new Order();
+        savedOrder.setPrice(bookPrice);
+        when(orderRepository.save(any(Order.class))).thenReturn(savedOrder);
 
-        lenient().when(modelMapper.map(any(OrderDTO.class), eq(Order.class))).thenReturn(new Order());
-        lenient().when(modelMapper.map(any(Client.class), eq(ClientDTO.class))).thenReturn(new ClientDTO());
-        lenient().when(modelMapper.map(any(Order.class), eq(OrderDTO.class))).thenReturn(new OrderDTO());
-
+        when(modelMapper.map(any(Order.class), eq(OrderDTO.class))).thenReturn(new OrderDTO());
         orderService.addOrder(orderDto);
 
-        assertTrue(new BigDecimal("30.00").compareTo(client.getBalance()) == 0, "Balance deduction failed");
+        assertEquals(0, new BigDecimal("30.00").compareTo(client.getBalance()), "Balance deduction failed");
         verify(orderRepository, times(1)).save(any(Order.class));
-        verify(clientService, times(1)).updateClientByEmail(eq(clientEmail), any(ClientDTO.class));
+        verify(clientRepository, times(1)).save(client);
+        verifyNoInteractions(clientService);
     }
 
     @Test

@@ -11,9 +11,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,15 +51,24 @@ class ClientServiceTest {
     @Test
     void testUpdateClient_Success() {
         String email = "test@client.com";
-        Client client = new Client();
-        ClientDTO dto = new ClientDTO();
-        dto.setEmail(email);
+        Client existingClient = new Client();
+        existingClient.setEmail(email);
+        existingClient.setName("Old Name");
+        existingClient.setBalance(BigDecimal.ZERO);
 
-        when(clientRepository.findByEmail(email)).thenReturn(Optional.of(client));
-        when(modelMapper.map(dto, Client.class)).thenReturn(client);
+        ClientDTO updateDto = new ClientDTO();
+        updateDto.setName("New Name");
+        updateDto.setBalance(new BigDecimal("100.00"));
 
-        clientService.updateClientByEmail(email, dto);
+        when(clientRepository.findByEmail(email)).thenReturn(Optional.of(existingClient));
+        when(clientRepository.save(any(Client.class))).thenReturn(existingClient);
 
-        verify(clientRepository).save(client);
+        when(modelMapper.map(any(Client.class), eq(ClientDTO.class))).thenReturn(updateDto);
+
+        clientService.updateClientByEmail(email, updateDto);
+
+        assertEquals("New Name", existingClient.getName());
+        assertEquals(new BigDecimal("100.00"), existingClient.getBalance());
+        verify(clientRepository).save(existingClient);
     }
 }

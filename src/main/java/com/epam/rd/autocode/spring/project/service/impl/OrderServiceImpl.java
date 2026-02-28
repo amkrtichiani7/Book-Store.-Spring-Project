@@ -29,15 +29,13 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ClientRepository clientRepository;
-    private final ClientService clientService;
     private final EmployeeRepository employeeRepository;
     private final BookRepository bookRepository;
     private final ModelMapper modelMapper;
 
-    public OrderServiceImpl(OrderRepository orderRepository,ClientRepository clientRepository, ClientService clientService, EmployeeRepository employeeRepository, BookRepository bookRepository, ModelMapper modelMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository,ClientRepository clientRepository, EmployeeRepository employeeRepository, BookRepository bookRepository, ModelMapper modelMapper) {
         this.orderRepository = orderRepository;
         this.clientRepository = clientRepository;
-        this.clientService = clientService;
         this.employeeRepository = employeeRepository;
         this.bookRepository = bookRepository;
         this.modelMapper = modelMapper;
@@ -93,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
             throw new InsufficientFundsException("Insufficient funds! Required: $" + total + ", Available: $" + client.getBalance());
         }else{
             client.setBalance(client.getBalance().subtract(total));
-            clientService.updateClientByEmail(client.getEmail(),modelMapper.map(client, ClientDTO.class));
+            clientRepository.save(client);
         }
 
         order.setPrice(total);

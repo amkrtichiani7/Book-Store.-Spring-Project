@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/clients")
 public class ClientController {
     private final ClientService clientService;
+    private static final String DEFAULT_PAGE = "0";
+    private static final String DEFAULT_SIZE = "5";
+    private static final String DEFAULT_SORT = "name";
 
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
@@ -24,9 +27,9 @@ public class ClientController {
 
     @GetMapping
     public String listClients(@RequestParam(name = "keyword", required = false) String keyword,
-                              @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "5") int size,
-                              @RequestParam(defaultValue = "name") String sortBy,
+                              @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+                              @RequestParam(defaultValue = DEFAULT_SIZE) int size,
+                              @RequestParam(defaultValue = DEFAULT_SORT) String sortBy,
                               Model model) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
 

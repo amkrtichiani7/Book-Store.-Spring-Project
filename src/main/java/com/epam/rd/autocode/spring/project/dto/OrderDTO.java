@@ -21,7 +21,7 @@ public class OrderDTO{
     private String employeeEmail;
 
     private LocalDateTime orderDate;
-    private BigDecimal price; // Calculated on server, but can be validated if needed
+    private BigDecimal price;
 
     @NotEmpty(message = "An order must contain at least one book")
     @Valid

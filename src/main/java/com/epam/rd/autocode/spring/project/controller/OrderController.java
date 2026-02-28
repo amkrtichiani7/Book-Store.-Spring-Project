@@ -9,6 +9,7 @@ import com.epam.rd.autocode.spring.project.service.ClientService;
 import com.epam.rd.autocode.spring.project.service.EmployeeService;
 import com.epam.rd.autocode.spring.project.service.OrderService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
@@ -32,6 +34,10 @@ public class OrderController {
     private final EmployeeService employeeService;
     private final ClientService clientService;
     private final BookService bookService;
+    private static final String DEFAULT_PAGE = "0";
+    private static final String DEFAULT_PAGE_SIZE = "10";
+    private static final String DEFAULT_SORT = "orderDate";
+    private static final int LARGE_LIST_SIZE = 100;
 
     public OrderController(OrderService orderService, EmployeeService employeeService,
                            ClientService clientService, BookService bookService) {
@@ -51,7 +57,7 @@ public class OrderController {
         initial.setQuantity(1);
         items.add(initial);
         order.setBookItems(items);
-        Pageable allItems = PageRequest.of(0, 100);
+        Pageable allItems = PageRequest.of(0, LARGE_LIST_SIZE);
 
         model.addAttribute("order", order);
         model.addAttribute("employees", employeeService.getAllEmployees(allItems).getContent());
@@ -63,9 +69,9 @@ public class OrderController {
     @GetMapping
     @PreAuthorize("hasAnyRole('EMPLOYEE', 'ADMIN')")
     public String listOrders(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "orderDate") String sortBy,
+            @RequestParam(defaultValue = DEFAULT_PAGE) int page,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(defaultValue = DEFAULT_SORT) String sortBy,
             Model model) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
@@ -86,7 +92,7 @@ public class OrderController {
         orderDTO.setClientEmail(principal.getName());
 
         if (result.hasErrors()) {
-            Pageable allItems = PageRequest.of(0, 100);
+            Pageable allItems = PageRequest.of(0, LARGE_LIST_SIZE);
             model.addAttribute("employees", employeeService.getAllEmployees(allItems).getContent());
             model.addAttribute("allBooks", bookService.getAllBooks(allItems).getContent());
             return "order-form";
@@ -103,7 +109,7 @@ public class OrderController {
                     assignedEmployee = employeeService.getEmployeeByEmail(selectedEmpEmail);
                 }
             } catch (Exception e) {
-                System.err.println("Note: Could not fetch details for employee: " + selectedEmpEmail);
+                log.error("Failed to fetch details for employee: {}", selectedEmpEmail, e);
             }
 
             ra.addFlashAttribute("successMessage", "Order placed successfully!");

@@ -43,7 +43,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee existingEmployee = employeeRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("Employee not found"));
 
-        modelMapper.map(employee, existingEmployee);
+        existingEmployee.setName(employee.getName());
+        existingEmployee.setPhone(employee.getPhone());
+        existingEmployee.setBirthDate(employee.getBirthDate());
 
         Employee updatedEmployee = employeeRepository.save(existingEmployee);
         return modelMapper.map(updatedEmployee, EmployeeDTO.class);
@@ -63,8 +65,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         Employee employee = modelMapper.map(employeeDTO, Employee.class);
         employee.setPassword(passwordEncoder.encode(employeeDTO.getPassword()));
-        employeeRepository.save(employee);
-        return employeeDTO;
+        Employee savedEmployee = employeeRepository.save(employee);
+        return modelMapper.map(savedEmployee,EmployeeDTO.class);
     }
 
     @Override
